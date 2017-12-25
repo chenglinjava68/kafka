@@ -38,7 +38,7 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
  */
 @State(Scope.Thread)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
-public class LRUCacheBenchmark {
+public class  LRUCacheBenchmark {
 
     private static final int DISTINCT_KEYS = 10_000;
 
