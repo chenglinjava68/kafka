@@ -18,40 +18,21 @@
 package kafka.message
 
 import java.io.ByteArrayOutputStream
-import scala.collection._
-import org.junit._
+
 import org.junit.Assert._
+import org.junit._
 
 class MessageCompressionTest {
 
   @Test
   def testSimpleCompressDecompress() {
-    val codecs = mutable.ArrayBuffer[CompressionCodec](GZIPCompressionCodec)
-    if (isSnappyAvailable)
-      codecs += SnappyCompressionCodec
-    if (isLZ4Available)
-      codecs += LZ4CompressionCodec
-    for (codec <- codecs)
-      testSimpleCompressDecompress(codec)
+
   }
 
   //  A quick test to ensure any growth or increase in compression size is known when upgrading libraries
   @Test
   def testCompressSize() {
-    val bytes1k: Array[Byte] = (0 until 1000).map(_.toByte).toArray
-    val bytes2k: Array[Byte] = (1000 until 2000).map(_.toByte).toArray
-    val bytes3k: Array[Byte] = (3000 until 4000).map(_.toByte).toArray
-    val messages: List[Message] = List(new Message(bytes1k, Message.NoTimestamp, Message.MagicValue_V1),
-                                       new Message(bytes2k, Message.NoTimestamp, Message.MagicValue_V1),
-                                       new Message(bytes3k, Message.NoTimestamp, Message.MagicValue_V1))
 
-    testCompressSize(GZIPCompressionCodec, messages, 396)
-
-    if (isSnappyAvailable)
-      testCompressSize(SnappyCompressionCodec, messages, 503)
-
-    if (isLZ4Available)
-      testCompressSize(LZ4CompressionCodec, messages, 387)
   }
 
   def testSimpleCompressDecompress(compressionCodec: CompressionCodec) {
@@ -67,14 +48,6 @@ class MessageCompressionTest {
     assertEquals(s"$compressionCodec size has changed.", expectedSize, messageSet.sizeInBytes)
   }
 
-  def isSnappyAvailable: Boolean = {
-    try {
-      new org.xerial.snappy.SnappyOutputStream(new ByteArrayOutputStream())
-      true
-    } catch {
-      case _: UnsatisfiedLinkError | _: org.xerial.snappy.SnappyError => false
-    }
-  }
 
   def isLZ4Available: Boolean = {
     try {
